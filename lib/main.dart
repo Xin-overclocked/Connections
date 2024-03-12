@@ -11,9 +11,9 @@ class MyApp extends StatelessWidget {
       title: 'Mentor-Mentee',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        fontFamily: 'Roboto', // Change the font to Roboto for consistency
+        fontFamily: 'Roboto',
       ),
-      home: LoginPage(), // Set the initial route to the LoginPage
+      home: LoginPage(),
     );
   }
 }
@@ -83,8 +83,6 @@ class LoginPage extends StatelessWidget {
                   SizedBox(height: 20.0),
                   ElevatedButton(
                     onPressed: () {
-                      // Implement your login logic here
-                      // For simplicity, let's just navigate to the main page
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => MyHomePage()),
@@ -124,9 +122,6 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
-
-
-
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
@@ -240,7 +235,7 @@ class _SearchWidgetState extends State<SearchWidget> {
             decoration: InputDecoration(
               labelText: 'Search',
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
+                borderRadius: BorderRadius.circular(20.0),
               ),
               prefixIcon: Icon(Icons.search),
             ),
@@ -250,11 +245,22 @@ class _SearchWidgetState extends State<SearchWidget> {
           child: ListView.builder(
             itemCount: _searchResults.length,
             itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text(_searchResults[index].name),
+              return GestureDetector(
                 onTap: () {
-                  // Implement what happens when a user taps on a search result
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SimpleProfilePage(_searchResults[index])),
+                  );
                 },
+                child: ListTile(
+                  leading: CircleAvatar(
+                    child: Text(_searchResults[index].name[0]),
+                  ),
+                  title: Text(
+                    _searchResults[index].name,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
               );
             },
           ),
@@ -272,6 +278,76 @@ class _SearchWidgetState extends State<SearchWidget> {
         }
       }
     });
+  }
+}
+
+class SimpleProfilePage extends StatelessWidget {
+  final Person person;
+
+  SimpleProfilePage(this.person);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          person.name,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.blue,
+                child: Text(
+                  person.name[0].toUpperCase(),
+                  style: TextStyle(fontSize: 40, color: Colors.white),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Center(
+              child: Text(
+                person.name,
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+            SizedBox(height: 10),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Navigate to the chat screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ChatScreen(person)),
+                  );
+                },
+                child: Text('Message'),
+              ),
+            ),
+            SizedBox(height: 10),
+            Center(
+              child: Text(
+                'Email: ${person.email}',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            ),
+            SizedBox(height: 10),
+            Center(
+              child: Text(
+                'Hashtag: ${person.hashtag}',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -293,8 +369,7 @@ class MessagesWidget extends StatelessWidget {
     return ListView.builder(
       itemCount: people.length,
       itemBuilder: (BuildContext context, int index) {
-        // Check if the person is not "Universiti Sains Malaysia"
-        if (people[index].name != 'Universiti Sains Malaysia') {
+        if (people[index].name != 'Universiti Sains Malaysia' && people[index].name != 'Universiti Malaya') {
           return InkWell(
             onTap: () {
               Navigator.push(
@@ -318,7 +393,7 @@ class MessagesWidget extends StatelessWidget {
             ),
           );
         } else {
-          return SizedBox.shrink(); // Return an empty widget if it's "Universiti Sains Malaysia"
+          return SizedBox.shrink();
         }
       },
     );
@@ -328,8 +403,8 @@ class MessagesWidget extends StatelessWidget {
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    String userName = 'Low Jia Xin'; // Example user name
-    String firstLetter = userName.isNotEmpty ? userName[0] : ''; // Extract first letter of the user's name
+    String userName = 'Low Jia Xin';
+    String firstLetter = userName.isNotEmpty ? userName[0] : '';
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -353,14 +428,14 @@ class ProfilePage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CircleAvatar(
               radius: 50,
               backgroundColor: Colors.blue,
               child: Text(
-                firstLetter.toUpperCase(), // Display first letter as uppercase
-                style: TextStyle(fontSize: 40, color: Colors.white), // Adjust size and color as needed
+                firstLetter.toUpperCase(),
+                style: TextStyle(fontSize: 40, color: Colors.white),
               ),
             ),
             SizedBox(width: 20),
@@ -379,6 +454,11 @@ class ProfilePage extends StatelessWidget {
                 SizedBox(height: 10),
                 Text(
                   'Email: jiaxin@example.com',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Hashtag: #UM',
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
                 SizedBox(height: 20),
@@ -411,7 +491,6 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-
 class NotificationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -425,10 +504,10 @@ class NotificationsPage extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: Text('No Notification',
-        style: 
-          TextStyle(
-            fontSize: 20
+        child: Text(
+          'No Notification',
+          style: TextStyle(
+            fontSize: 20,
           ),
         ),
       ),
@@ -458,6 +537,39 @@ class _ChatScreenState extends State<ChatScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              switch (value) {
+                case 'View Profile':
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SimpleProfilePage(widget.person)),
+                  );
+                case 'Video Call':
+                  // Implement video call functionality
+                  break;
+                case 'Report':
+                  // Implement report functionality
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem<String>(
+                value: 'View Profile',
+                child: Text('View Profile'),
+              ),
+              PopupMenuItem<String>(
+                value: 'Video Call',
+                child: Text('Video Call'),
+              ),
+              PopupMenuItem<String>(
+                value: 'Report',
+                child: Text('Report'),
+              ),
+            ],
+          ),
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -496,7 +608,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return IconTheme(
       data: IconThemeData(color: Theme.of(context).colorScheme.secondary),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 8.0),
+        margin: EdgeInsets.symmetric(horizontal: 20.0),
         child: Row(
           children: <Widget>[
             Flexible(
@@ -528,9 +640,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
 class Person {
   final String name;
+  final String email;
+  final String hashtag;
   final List<Message> messages;
 
-  Person(this.name, this.messages);
+  Person(this.name, this.email, this.hashtag, this.messages);
 }
 
 class Message {
@@ -543,6 +657,8 @@ class Message {
 List<Person> people = [
   Person(
     'John Doe',
+    'john@example.com',
+    '#UKM',
     [
       Message('Hello!', false),
       Message('How are you?', false),
@@ -551,6 +667,8 @@ List<Person> people = [
   ),
   Person(
     'Alice Smith',
+    'alice@example.com',
+    '#USM',
     [
       Message('Hi!', false),
       Message('Nice to meet you!', false),
@@ -558,6 +676,8 @@ List<Person> people = [
   ),
   Person(
     'Bob Johnson',
+    'bob@example.com',
+    '#UM',
     [
       Message('Hello!', false),
       Message('I\'m doing great, thanks!', false),
@@ -566,8 +686,14 @@ List<Person> people = [
   ),
   Person(
     'Universiti Sains Malaysia',
-    [
-     
-    ],
+    'usm@example.com',
+    '#USM',
+    [],
+  ),
+  Person(
+    'Universiti Malaya',
+    'um@example.com',
+    '#UM',
+    [],
   ),
 ];
