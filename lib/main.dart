@@ -364,30 +364,187 @@ class SimpleProfilePage extends StatelessWidget {
   }
 }
 
-class ContactWidget extends StatelessWidget {
+class ContactWidget extends StatefulWidget {
+  @override
+  _ContactWidgetState createState() => _ContactWidgetState();
+}
+
+class _ContactWidgetState extends State<ContactWidget> {
+  int hasCards = 0; // Track the number of remaining cards
+  bool cardsDisplayed = false; // Track card display state
+
+  @override
+  void initState() {
+    super.initState();
+    cardsDisplayed = true; // Initialize to false
+    hasCards = people.length; // Set initial hasCards value
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-        child: Center(
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.25,
-        height: MediaQuery.of(context).size.height * 0.75,
-        child: AppinioSwiper(
-          cardCount: 10,
-          swipeOptions: const SwipeOptions.all(),
-          cardBuilder: (BuildContext context, int index) {
-            return Container(
-              alignment: Alignment.center,
-              // child: const Text(index.toString()),
-              color: CupertinoColors.activeBlue,
-            );
-          },
+      child: Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.25,
+          height: MediaQuery.of(context).size.height * 0.75,
+          child: cardsDisplayed
+              ? Stack(
+                  // Use Stack for layering
+                  children: [
+                    // Background container with slight offset for shadow effect
+                    Container(
+                        decoration: hasCards > 0
+                            ? BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                    20.0), // Match card corners
+                                boxShadow: [
+                                  BoxShadow(
+                                    // Define the shadow
+                                    color: Colors.grey.withOpacity(
+                                        0.3), // Shadow color (optional)
+                                    offset: Offset(
+                                        5.0, 5.0), // Shadow offset (optional)
+                                    blurRadius:
+                                        10.0, // Shadow blur radius (optional)
+                                  ),
+                                ],
+                              )
+                            : BoxDecoration()),
+                    AppinioSwiper(
+                      cardCount:
+                          people.length, // Use the length of the people list
+                      swipeOptions: const SwipeOptions.all(),
+                      onSwipeEnd:
+                          (int index, int index2, SwiperActivity direction) {
+                        setState(() {
+                          hasCards--; // Decrement hasCards
+                          cardsDisplayed =
+                              hasCards > 0; // Mark cards as displayed
+                        });
+                      },
+                      cardBuilder: (BuildContext context, int index) {
+                        final person =
+                            people[index]; // Get the Person object at index
+                        return Container(
+                          alignment: Alignment.center, // Center the content
+                          decoration: BoxDecoration(
+                              color: Color.fromRGBO(255, 255, 255,
+                                  1), // Maintain container color),
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(20),
+                                  topLeft: Radius.circular(20),
+                                  bottomLeft: Radius.circular(20),
+                                  bottomRight: Radius.circular(20))),
+                          child: Column(
+                            // Arrange text vertically
+                            mainAxisAlignment: MainAxisAlignment
+                                .center, // Center content within column
+                            children: [
+                              CircleAvatar(
+                                  radius: 50.0,
+                                  backgroundColor: Colors.red,
+                                  backgroundImage: person.image),
+                              Text(
+                                person.name, // Display the person's name
+                                style: TextStyle(
+                                  // Customize text style (optional)
+                                  fontFamily: 'Pacifico',
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                  height: 10.0), // Add spacing between lines
+                              SizedBox(
+                                height: 20.0,
+                                width: 150.0,
+                                child: Divider(
+                                  color: const Color.fromARGB(255, 39, 41, 41),
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                // Display email and hashtag
+                                children: [
+                                  Text(
+                                    'Email: ',
+                                    style: TextStyle(
+                                      fontFamily: 'Source Sans Pro',
+                                      color: Colors
+                                          .grey, // Differentiate label text
+                                      letterSpacing: 2.5,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(person.email),
+                                ],
+                              ),
+                              SizedBox(
+                                  height:
+                                      5.0), // Add spacing between email and hashtag
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                // Display hashtag
+                                children: [
+                                  Text(
+                                    'Hashtag: ',
+                                    style: TextStyle(
+                                      fontFamily: 'Source Sans Pro',
+                                      color: Colors
+                                          .grey, // Differentiate label text
+                                      letterSpacing: 2.5,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(person.hashtag),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                                width: 150.0,
+                                child: Divider(
+                                  color: const Color.fromARGB(255, 39, 41, 41),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                )
+              : Center(child: Text('No contacts to display')),
         ),
       ),
-    )
     );
   }
 }
+
+// class ContactWidget extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return CupertinoPageScaffold(
+//         child: Center(
+//       child: SizedBox(
+//         width: MediaQuery.of(context).size.width * 0.25,
+//         height: MediaQuery.of(context).size.height * 0.75,
+//         child: AppinioSwiper(
+//           cardCount: 10,
+//           swipeOptions: const SwipeOptions.all(),
+//           // controller: ,
+//           cardBuilder: (BuildContext context, int index) {
+//             return Container(
+//               alignment: Alignment.center,
+//               // child: const Text(index.toString()),
+
+//               color: CupertinoColors.activeBlue,
+//             );
+//           },
+//         ),
+//       ),
+//     ));
+//   }
+// }
 
 // class ContactWidget extends StatelessWidget {
 //   List<Container> cards = [
@@ -711,8 +868,9 @@ class Person {
   final String email;
   final String hashtag;
   final List<Message> messages;
+  final ImageProvider image;
 
-  Person(this.name, this.email, this.hashtag, this.messages);
+  Person(this.name, this.email, this.hashtag, this.image, this.messages);
 }
 
 class Message {
@@ -722,11 +880,17 @@ class Message {
   Message(this.text, this.sentByCurrentUser);
 }
 
+final AssetImage johnDoeImage = AssetImage(
+    '/Users/lowyinyin/Documents/JX/VHack_Interview_Assistant-1/images/profile.jpeg');
+final AssetImage aliceSmithImage = AssetImage(
+    '/Users/lowyinyin/Documents/JX/VHack_Interview_Assistant-1/images/profile1.jpeg');
+
 List<Person> people = [
   Person(
     'John Doe',
     'john@example.com',
     '#UKM',
+    johnDoeImage,
     [
       Message('Hello!', false),
       Message('How are you?', false),
@@ -737,6 +901,7 @@ List<Person> people = [
     'Alice Smith',
     'alice@example.com',
     '#USM',
+    aliceSmithImage,
     [
       Message('Hi!', false),
       Message('Nice to meet you!', false),
@@ -746,6 +911,7 @@ List<Person> people = [
     'Bob Johnson',
     'bob@example.com',
     '#UM',
+    aliceSmithImage,
     [
       Message('Hello!', false),
       Message('I\'m doing great, thanks!', false),
@@ -756,12 +922,14 @@ List<Person> people = [
     'Universiti Sains Malaysia',
     'usm@example.com',
     '#USM',
+    aliceSmithImage,
     [],
   ),
   Person(
     'Universiti Malaya',
     'um@example.com',
     '#UM',
+    aliceSmithImage,
     [],
   ),
 ];
