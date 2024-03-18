@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:appinio_swiper/appinio_swiper.dart';
+import 'package:flutter/cupertino.dart';
 
 void main() {
   runApp(MyApp());
@@ -89,7 +93,8 @@ class LoginPage extends StatelessWidget {
                       );
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.white),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
@@ -97,7 +102,8 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     child: Ink(
-                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                       child: Text(
                         'Login',
                         style: TextStyle(
@@ -133,7 +139,12 @@ class _MyHomePageState extends State<MyHomePage> {
     MessagesWidget(),
   ];
 
-  List<String> _appBarTitles = ['Home', 'Find Friends & Events', 'Contact', 'Messages'];
+  List<String> _appBarTitles = [
+    'Home',
+    'Find Friends & Events',
+    'Contact',
+    'Messages'
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -249,7 +260,9 @@ class _SearchWidgetState extends State<SearchWidget> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SimpleProfilePage(_searchResults[index])),
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            SimpleProfilePage(_searchResults[index])),
                   );
                 },
                 child: ListTile(
@@ -354,14 +367,60 @@ class SimpleProfilePage extends StatelessWidget {
 class ContactWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        'Contact',
-        style: TextStyle(fontSize: 24),
+    return CupertinoPageScaffold(
+        child: Center(
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.25,
+        height: MediaQuery.of(context).size.height * 0.75,
+        child: AppinioSwiper(
+          cardCount: 10,
+          swipeOptions: const SwipeOptions.all(),
+          cardBuilder: (BuildContext context, int index) {
+            return Container(
+              alignment: Alignment.center,
+              // child: const Text(index.toString()),
+              color: CupertinoColors.activeBlue,
+            );
+          },
+        ),
       ),
+    )
     );
   }
 }
+
+// class ContactWidget extends StatelessWidget {
+//   List<Container> cards = [
+//     Container(
+//       alignment: Alignment.center,
+//       child: const Text('1'),
+//       color: Colors.blue,
+//     ),
+//     Container(
+//       alignment: Alignment.center,
+//       child: const Text('2'),
+//       color: Colors.red,
+//     ),
+//     Container(
+//       alignment: Alignment.center,
+//       child: const Text('3'),
+//       color: Colors.purple,
+//     )
+//   ];
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Flexible(
+//         child: CardSwiper(
+//           cardsCount: cards.length,
+//           cardBuilder: (context, index, percentThresholdX, percentThresholdY) =>
+//               cards[index],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class MessagesWidget extends StatelessWidget {
   @override
@@ -369,12 +428,14 @@ class MessagesWidget extends StatelessWidget {
     return ListView.builder(
       itemCount: people.length,
       itemBuilder: (BuildContext context, int index) {
-        if (people[index].name != 'Universiti Sains Malaysia' && people[index].name != 'Universiti Malaya') {
+        if (people[index].name != 'Universiti Sains Malaysia' &&
+            people[index].name != 'Universiti Malaya') {
           return InkWell(
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatScreen(people[index])),
+                MaterialPageRoute(
+                    builder: (context) => ChatScreen(people[index])),
               );
             },
             child: ListTile(
@@ -544,7 +605,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 case 'View Profile':
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SimpleProfilePage(widget.person)),
+                    MaterialPageRoute(
+                        builder: (context) => SimpleProfilePage(widget.person)),
                   );
                 case 'Video Call':
                   // Implement video call functionality
@@ -580,11 +642,15 @@ class _ChatScreenState extends State<ChatScreen> {
                 Message message = widget.person.messages[index];
                 return ListTile(
                   title: Align(
-                    alignment: message.sentByCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+                    alignment: message.sentByCurrentUser
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: Container(
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: message.sentByCurrentUser ? Colors.blue[200] : Colors.grey[300],
+                        color: message.sentByCurrentUser
+                            ? Colors.blue[200]
+                            : Colors.grey[300],
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(message.text),
@@ -614,7 +680,8 @@ class _ChatScreenState extends State<ChatScreen> {
             Flexible(
               child: TextField(
                 controller: _textController,
-                decoration: InputDecoration.collapsed(hintText: 'Send a message'),
+                decoration:
+                    InputDecoration.collapsed(hintText: 'Send a message'),
               ),
             ),
             Container(
@@ -624,7 +691,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 onPressed: () {
                   if (_textController.text.isNotEmpty) {
                     setState(() {
-                      widget.person.messages.add(Message(_textController.text, true));
+                      widget.person.messages
+                          .add(Message(_textController.text, true));
                       _textController.clear();
                     });
                   }
