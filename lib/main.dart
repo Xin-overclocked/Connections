@@ -4,6 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/cupertino.dart';
 
+final ButtonStyle buttonPrimary = ElevatedButton.styleFrom(
+  minimumSize: Size(100, 50),
+  foregroundColor: Colors.black,
+  elevation: 0,
+  shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(50))),
+);
+
 void main() {
   runApp(MyApp());
 }
@@ -506,6 +514,11 @@ class _ContactWidgetState extends State<ContactWidget> {
                                   color: const Color.fromARGB(255, 39, 41, 41),
                                 ),
                               ),
+
+                              ElevatedButton(
+                                  style: buttonPrimary,
+                                  onPressed: () {},
+                                  child: Text('Connect Now'))
                             ],
                           ),
                         );
