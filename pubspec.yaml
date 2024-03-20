@@ -35,3 +35,6 @@ flutter:
     - family: Source Sans Pro
       fonts:
         - asset: /Users/lowyinyin/Documents/JX/VHack_Interview_Assistant-1/fonts/SourceSansPro-Regular.ttf
+    - family: Madimi
+      fonts:
+        - asset: /Users/lowyinyin/Documents/JX/VHack_Interview_Assistant-1/fonts/MadimiOne-Regular.ttf

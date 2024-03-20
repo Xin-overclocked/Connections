@@ -20,10 +20,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Mentor-Mentee',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        fontFamily: 'Roboto',
+        // fontFamily: 'Roboto',
       ),
       home: LoginPage(),
     );
@@ -148,10 +149,10 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   List<String> _appBarTitles = [
-    'Home',
-    'Find Friends & Events',
-    'Contact',
-    'Messages'
+    'mentor-mentee',
+    'find friends & events',
+    'make connections',
+    'messages'
   ];
 
   void _onItemTapped(int index) {
@@ -167,7 +168,9 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(
           _appBarTitles[_selectedIndex],
           style: TextStyle(
+            fontFamily: 'Madimi',
             fontWeight: FontWeight.bold,
+            fontSize: 30,
           ),
         ),
         actions: [
@@ -213,7 +216,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Colors.black,
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
       ),
@@ -225,9 +228,88 @@ class HomeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        'Home',
-        style: TextStyle(fontSize: 24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Room 1
+          RoomTile(
+            title: 'Room 1',
+            dateTime: 'March 20, 2024 10:00 AM',
+            details: 'Details of Room 1',
+            width: MediaQuery.of(context).size.width *
+                0.95, // Set width to full width of the screen
+          ),
+          SizedBox(height: 20),
+          // Room 2
+          RoomTile(
+            title: 'Room 2',
+            dateTime: 'March 21, 2024 11:00 AM',
+            details: 'Details of Room 2',
+            width: MediaQuery.of(context).size.width *
+                0.95, // Set width to full width of the screen
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class RoomTile extends StatelessWidget {
+  final String title;
+  final String dateTime;
+  final String details;
+  final double width; // New property to control the width of the card
+
+  const RoomTile({
+    required this.title,
+    required this.dateTime,
+    required this.details,
+    required this.width, // Require width when creating RoomTile
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(title),
+              content: Text(details),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: Container(
+        width: width, // Set width of the card
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 5),
+            Text(
+              dateTime,
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -532,65 +614,6 @@ class _ContactWidgetState extends State<ContactWidget> {
     );
   }
 }
-
-// class ContactWidget extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return CupertinoPageScaffold(
-//         child: Center(
-//       child: SizedBox(
-//         width: MediaQuery.of(context).size.width * 0.25,
-//         height: MediaQuery.of(context).size.height * 0.75,
-//         child: AppinioSwiper(
-//           cardCount: 10,
-//           swipeOptions: const SwipeOptions.all(),
-//           // controller: ,
-//           cardBuilder: (BuildContext context, int index) {
-//             return Container(
-//               alignment: Alignment.center,
-//               // child: const Text(index.toString()),
-
-//               color: CupertinoColors.activeBlue,
-//             );
-//           },
-//         ),
-//       ),
-//     ));
-//   }
-// }
-
-// class ContactWidget extends StatelessWidget {
-//   List<Container> cards = [
-//     Container(
-//       alignment: Alignment.center,
-//       child: const Text('1'),
-//       color: Colors.blue,
-//     ),
-//     Container(
-//       alignment: Alignment.center,
-//       child: const Text('2'),
-//       color: Colors.red,
-//     ),
-//     Container(
-//       alignment: Alignment.center,
-//       child: const Text('3'),
-//       color: Colors.purple,
-//     )
-//   ];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Flexible(
-//         child: CardSwiper(
-//           cardsCount: cards.length,
-//           cardBuilder: (context, index, percentThresholdX, percentThresholdY) =>
-//               cards[index],
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class MessagesWidget extends StatelessWidget {
   @override
