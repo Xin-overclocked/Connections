@@ -224,6 +224,72 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+class EnrollButton extends StatefulWidget {
+  // final bool enrolled; // Track enrollment state
+
+  // const EnrollButton({
+  //   required this.enrolled,
+  // });
+
+  @override
+  _EnrollButtonState createState() => _EnrollButtonState();
+}
+
+class _EnrollButtonState extends State<EnrollButton> {
+  bool isButtonActive = true;
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: isButtonActive
+          ? () {
+              setState(() => isButtonActive = false);
+              // Handle enrollment logic (potentially using setState)
+              // You can optionally show a snackbar or dialog here
+            }
+          : null,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: isButtonActive ? Colors.white : Colors.blue,
+        padding: EdgeInsets.symmetric(horizontal: 10.0),
+      ),
+      child: Text(
+        isButtonActive ? 'Enroll' : 'Enrolled',
+        style: TextStyle(
+          color: isButtonActive ? Colors.black : Colors.grey, // Adjust colors
+          fontSize: 16,
+        ),
+      ),
+    );
+  }
+}
+
+class RoomDetails {
+  final String title;
+  final String dateTime;
+  final String details;
+
+  const RoomDetails({
+    required this.title,
+    required this.dateTime,
+    required this.details,
+  });
+}
+
+// Dummy room details
+final List<RoomDetails> dummyRoomDetails = [
+  RoomDetails(
+    title: 'Room 1',
+    dateTime: 'March 20, 2024 10:00 AM',
+    details:
+        'This is a meeting room for team A. The agenda includes project brainstorming and task allocation.',
+  ),
+  RoomDetails(
+    title: 'Room 2',
+    dateTime: 'March 21, 2024 11:00 AM',
+    details:
+        'This is a client meeting room. The agenda includes presenting our latest proposal and discussing next steps.',
+  ),
+];
+
 class HomeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -245,28 +311,21 @@ class HomeWidget extends StatelessWidget {
           ),
           // Room list
           Expanded(
-            // Use Expanded for flexible space
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start, // Align at top
-              children: [
-                // Room 1
-                RoomTile(
-                  title: 'Room 1',
-                  dateTime: 'March 20, 2024 10:00 AM',
-                  details: 'Details of Room 1',
-                  width: MediaQuery.of(context).size.width *
-                      0.95, // Set width to full width of the screen
-                ),
-                SizedBox(height: 20),
-                // Room 2
-                RoomTile(
-                  title: 'Room 2',
-                  dateTime: 'March 21, 2024 11:00 AM',
-                  details: 'Details of Room 2',
-                  width: MediaQuery.of(context).size.width *
-                      0.95, // Set width to full width of the screen
-                ),
-              ],
+              children: dummyRoomDetails
+                  .map((room) => Column(
+                        children: [
+                          RoomTile(
+                            roomDetails: room,
+                            width: MediaQuery.of(context).size.width * 0.95,
+                            showEnrollButton: room.title ==
+                                'Room 1', // Set flag based on title
+                          ),
+                          SizedBox(height: 20), // Add space between RoomTiles
+                        ],
+                      ))
+                  .toList(),
             ),
           ),
         ],
@@ -275,18 +334,37 @@ class HomeWidget extends StatelessWidget {
   }
 }
 
-class RoomTile extends StatelessWidget {
-  final String title;
-  final String dateTime;
-  final String details;
+class RoomTile extends StatefulWidget {
+  final RoomDetails roomDetails; // Use the RoomDetails class
   final double width; // New property to control the width of the card
+  final bool showEnrollButton; // Flag to control button visibility
 
   const RoomTile({
-    required this.title,
-    required this.dateTime,
-    required this.details,
-    required this.width, // Require width when creating RoomTile
+    required this.roomDetails,
+    required this.width,
+    required this.showEnrollButton,
   });
+
+  @override
+  _RoomTileState createState() => _RoomTileState();
+}
+
+class _RoomTileState extends State<RoomTile> {
+  bool _isEnrolled = false; // Internal state for enrollment
+
+  @override
+  void initState() {
+    super.initState();
+    _isEnrolled = widget.showEnrollButton
+        ? false
+        : true; // Set initial enrollment based on flag
+  }
+
+  void _toggleEnrollment() {
+    setState(() {
+      _isEnrolled = !_isEnrolled;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -296,8 +374,9 @@ class RoomTile extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text(title),
-              content: Text(details),
+              title: Text(
+                  widget.roomDetails.title), // Access details from RoomDetails
+              content: Text(widget.roomDetails.details),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
@@ -311,7 +390,7 @@ class RoomTile extends StatelessWidget {
         );
       },
       child: Container(
-        width: width, // Set width of the card
+        width: widget.width, // Set width of the card
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
@@ -321,14 +400,24 @@ class RoomTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              title,
+              widget.roomDetails.title, // Access title from RoomDetails
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 5),
             Text(
-              dateTime,
+              widget.roomDetails.dateTime, // Access dateTime from RoomDetails
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
+            SizedBox(height: 10), // Add space before button
+            if (widget.showEnrollButton) // Only show for Room 1
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  EnrollButton(
+                      // enrolled: _isEnrolled,
+                      ),
+                ],
+              ),
           ],
         ),
       ),
