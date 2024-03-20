@@ -227,26 +227,47 @@ class _MyHomePageState extends State<MyHomePage> {
 class HomeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      // Maintain Scaffold for overall structure
+      body: Column(
+        // Use Column for vertical layout
         children: [
-          // Room 1
-          RoomTile(
-            title: 'Room 1',
-            dateTime: 'March 20, 2024 10:00 AM',
-            details: 'Details of Room 1',
-            width: MediaQuery.of(context).size.width *
-                0.95, // Set width to full width of the screen
+          // Title row (optional)
+          Container(
+            padding: EdgeInsets.fromLTRB(
+                20.0, 10.0, 20.0, 10.0), // Adjust padding as needed
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Add notification and profile icons here (optional)
+              ],
+            ),
           ),
-          SizedBox(height: 20),
-          // Room 2
-          RoomTile(
-            title: 'Room 2',
-            dateTime: 'March 21, 2024 11:00 AM',
-            details: 'Details of Room 2',
-            width: MediaQuery.of(context).size.width *
-                0.95, // Set width to full width of the screen
+          // Room list
+          Expanded(
+            // Use Expanded for flexible space
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start, // Align at top
+              children: [
+                // Room 1
+                RoomTile(
+                  title: 'Room 1',
+                  dateTime: 'March 20, 2024 10:00 AM',
+                  details: 'Details of Room 1',
+                  width: MediaQuery.of(context).size.width *
+                      0.95, // Set width to full width of the screen
+                ),
+                SizedBox(height: 20),
+                // Room 2
+                RoomTile(
+                  title: 'Room 2',
+                  dateTime: 'March 21, 2024 11:00 AM',
+                  details: 'Details of Room 2',
+                  width: MediaQuery.of(context).size.width *
+                      0.95, // Set width to full width of the screen
+                ),
+              ],
+            ),
           ),
         ],
       ),
