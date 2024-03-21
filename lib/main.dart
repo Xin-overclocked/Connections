@@ -1159,10 +1159,8 @@ class Message {
   Message(this.text, this.sentByCurrentUser);
 }
 
-final AssetImage johnDoeImage = AssetImage(
-    '/Users/lowyinyin/Documents/JX/VHack_Interview_Assistant-1/images/profile.jpeg');
-final AssetImage aliceSmithImage = AssetImage(
-    '/Users/lowyinyin/Documents/JX/VHack_Interview_Assistant-1/images/profile1.jpeg');
+final AssetImage johnDoeImage = AssetImage('assets/profile.jpeg');
+final AssetImage aliceSmithImage = AssetImage('assets/profile1.png');
 
 List<Person> people = [
   Person(
