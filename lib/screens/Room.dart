@@ -8,6 +8,7 @@ class Room extends StatefulWidget {
 
 class _RoomState extends State<Room> {
   List<Person> audienceList = [];
+  bool micRequested = false;
 
   @override
   void initState() {
@@ -109,11 +110,22 @@ class _RoomState extends State<Room> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image(
-                  image: slideImage,
-                  fit: BoxFit.cover,
+              child: GestureDetector(
+                onTap: () {
+                  // Navigate to fullscreen slide view
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FullScreenSlidePage(slideImage),
+                    ),
+                  );
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image(
+                    image: slideImage,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -156,23 +168,48 @@ class _RoomState extends State<Room> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          setState(() {
-            audienceList.add(
-              Person(
-                'JiaXin',
-                'jiaxin@example.com',
-                '#UM',
-                AssetImage('assets/profile1.jpeg'),
-                [],
-              ),
-            );
-          });
-        },
-        icon: Icon(Icons.add),
-        label: Text('Enter Room'),
-        backgroundColor: Colors.amber,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Visibility(
+            visible: !micRequested,
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                setState(() {
+                  audienceList.add(
+                    Person(
+                      'JiaXin',
+                      'jiaxin@example.com',
+                      '#UM',
+                      AssetImage('assets/jiaxin_profile.jpg'),
+                      [],
+                    ),
+                  );
+                });
+                setState(() {
+                  micRequested = true;
+                });
+              },
+              icon: Icon(Icons.add),
+              label: Text('Enter Room'),
+              backgroundColor: Colors.amber,
+              foregroundColor: Colors.white,
+            ),
+          ),
+          SizedBox(height: 10), // Spacer between buttons
+          Visibility(
+            visible: micRequested,
+            child: FloatingActionButton(
+              onPressed: () {
+                _showMicRequestDialog(context);
+              },
+              child: Icon(Icons.mic_off_rounded),
+              backgroundColor: Colors.amber,
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -205,6 +242,54 @@ class _RoomState extends State<Room> {
           ],
         );
       },
+    );
+  }
+
+  void _showMicRequestDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          content: Container(
+            decoration: BoxDecoration(
+              color: Colors.orange.shade100,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: EdgeInsets.all(20),
+            child: Text(
+              'You had requested the moderator to open your mic',
+              style: TextStyle(
+                color: Colors.black,
+                fontFamily: 'Madimi',
+                fontSize: 16,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class FullScreenSlidePage extends StatelessWidget {
+  final AssetImage slideImage;
+
+  const FullScreenSlidePage(this.slideImage);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        // Optionally, you can include an app bar in fullscreen mode
+        title: Text('Full Screen Slide'),
+      ),
+      body: Center(
+        child: Image(
+          image: slideImage,
+          fit: BoxFit.contain,
+        ),
+      ),
     );
   }
 }
