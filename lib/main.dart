@@ -1,15 +1,22 @@
+import 'dart:html';
+
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:styled_widget/styled_widget.dart';
+import 'package:vhack/screens/Room.dart';
 
 final ButtonStyle buttonPrimary = ElevatedButton.styleFrom(
   minimumSize: Size(100, 50),
   foregroundColor: Colors.black,
   elevation: 0,
   shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(50))),
+      borderRadius: BorderRadius.all(Radius.circular(20))),
 );
 
 void main() {
@@ -23,7 +30,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Mentor-Mentee',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.amber,
         // fontFamily: 'Roboto',
       ),
       home: LoginPage(),
@@ -43,7 +50,7 @@ class LoginPage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.blue.shade400, Colors.blue.shade900],
+            colors: [Colors.orange.shade400, Colors.orange.shade300],
           ),
         ),
         child: Center(
@@ -57,6 +64,7 @@ class LoginPage extends StatelessWidget {
                   Text(
                     'Login',
                     style: TextStyle(
+                      fontFamily: 'Madimi',
                       color: Colors.white,
                       fontSize: 40.0,
                       fontWeight: FontWeight.bold,
@@ -116,7 +124,7 @@ class LoginPage extends StatelessWidget {
                       child: Text(
                         'Login',
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: Colors.orange[300],
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
                         ),
@@ -149,8 +157,8 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   List<String> _appBarTitles = [
-    'mentor-mentee',
-    'find connections & events',
+    'Hello!',
+    'find friends & events',
     'make connections',
     'messages'
   ];
@@ -165,17 +173,23 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          _appBarTitles[_selectedIndex],
-          style: TextStyle(
-            fontFamily: 'Madimi',
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
+        title: Padding(
+          padding: EdgeInsets.only(top: 10.0, left: 10.0, bottom: 0),
+          child: Text(
+            _appBarTitles[_selectedIndex],
+            style: TextStyle(
+              fontFamily: "Madimi",
+              fontWeight: FontWeight.bold,
+              fontSize: 35.0,
+              color: Colors.black,
+            ),
           ),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications),
+            iconSize: 30.0,
+            color: Colors.amber,
+            icon: Icon(Icons.notifications_rounded),
             onPressed: () {
               Navigator.push(
                 context,
@@ -184,7 +198,9 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.account_circle),
+            iconSize: 30.0,
+            color: Colors.amber,
+            icon: Icon(Icons.account_circle_rounded),
             onPressed: () {
               Navigator.push(
                 context,
@@ -197,21 +213,22 @@ class _MyHomePageState extends State<MyHomePage> {
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.black,
+        showSelectedLabels: false,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home_rounded),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.search_rounded),
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.contacts),
+            icon: Icon(Icons.contacts_rounded),
             label: 'Contact',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.message),
+            icon: Icon(Icons.message_rounded),
             label: 'Messages',
           ),
         ],
@@ -249,6 +266,7 @@ class _EnrollButtonState extends State<EnrollButton> {
       child: Text(
         isButtonActive ? 'Enroll' : 'Enrolled',
         style: TextStyle(
+          fontFamily: 'Madimi',
           color: isButtonActive ? Colors.black : Colors.grey, // Adjust colors
           fontSize: 16,
         ),
@@ -279,7 +297,7 @@ final List<RoomDetails> dummyRoomDetails = [
   ),
   RoomDetails(
     title: 'Room 2',
-    dateTime: 'March 21, 2024 11:00 AM',
+    dateTime: 'Happening Now...',
     details:
         'This is a client meeting room. The agenda includes presenting our latest proposal and discussing next steps.',
   ),
@@ -296,11 +314,29 @@ class HomeWidget extends StatelessWidget {
           // Title row (optional)
           Container(
             padding: EdgeInsets.fromLTRB(
-                20.0, 10.0, 20.0, 10.0), // Adjust padding as needed
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                20.0, 0.0, 0.0, 30.0), // Adjust padding as needed
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Add notification and profile icons here (optional)
+                Row(
+                  // Wrap Text and potentially other left-aligned widgets
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: Text(
+                        "Jia Xin",
+                        style: TextStyle(
+                          fontFamily: 'Madimi',
+                          color: Colors.amber,
+                          fontSize: 50.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    // Add any other left-aligned widgets here (optional)
+                  ],
+                ),
               ],
             ),
           ),
@@ -308,19 +344,30 @@ class HomeWidget extends StatelessWidget {
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start, // Align at top
-              children: dummyRoomDetails
-                  .map((room) => Column(
-                        children: [
-                          RoomTile(
-                            roomDetails: room,
-                            width: MediaQuery.of(context).size.width * 0.95,
-                            showEnrollButton: room.title ==
-                                'Room 1', // Set flag based on title
-                          ),
-                          SizedBox(height: 20), // Add space between RoomTiles
-                        ],
-                      ))
-                  .toList(),
+              children: [
+                // RoomTile for Room 1
+                RoomTile(
+                  roomDetails: dummyRoomDetails[0], // Access Room 1 details
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  showEnrollButton: true, // Show button for Room 1
+                ),
+
+                SizedBox(height: 20), // Add space between RoomTiles
+                // RoomTile for Room 2
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => Room()),
+                    );
+                  },
+                  child: RoomTile(
+                    roomDetails: dummyRoomDetails[1], // Access Room 2 details
+                    width: MediaQuery.of(context).size.width * 0.95,
+                    showEnrollButton: false, // Show button for Room 2
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -363,58 +410,48 @@ class _RoomTileState extends State<RoomTile> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(
-                  widget.roomDetails.title), // Access details from RoomDetails
-              content: Text(widget.roomDetails.details),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Close'),
-                ),
+    return Container(
+      width: widget.width, // Set width of the card
+      padding:
+          EdgeInsets.only(top: 20.0, bottom: 20.0, left: 25.0, right: 10.0),
+      decoration: BoxDecoration(
+        color: Colors.orange
+            .shade50, // Set background color to yellow// Optional: Black border
+        borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3), // Shadow color
+            offset: Offset(5.0, 5.0), // Shadow offset
+            blurRadius: 10.0, // Shadow blur radius
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 5),
+          Text(
+            widget.roomDetails.title, // Access title from RoomDetails
+            style: TextStyle(
+              fontFamily: 'RoundBlack',
+              fontSize: 20,
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            widget.roomDetails.dateTime, // Access dateTime from RoomDetails
+            style: TextStyle(
+                fontFamily: 'RoundBold', fontSize: 15, color: Colors.grey),
+          ),
+          SizedBox(height: 10), // Add space before button
+          if (widget.showEnrollButton) // Only show for Room 1
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                EnrollButton(),
               ],
-            );
-          },
-        );
-      },
-      child: Container(
-        width: widget.width, // Set width of the card
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.roomDetails.title, // Access title from RoomDetails
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 5),
-            Text(
-              widget.roomDetails.dateTime, // Access dateTime from RoomDetails
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            SizedBox(height: 10), // Add space before button
-            if (widget.showEnrollButton) // Only show for Room 1
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  EnrollButton(
-                      // enrolled: _isEnrolled,
-                      ),
-                ],
-              ),
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -439,6 +476,7 @@ class _SearchWidgetState extends State<SearchWidget> {
             controller: _searchController,
             onChanged: _search,
             decoration: InputDecoration(
+              iconColor: Colors.amber,
               labelText: 'Search',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
@@ -511,7 +549,7 @@ class SimpleProfilePage extends StatelessWidget {
             Center(
               child: CircleAvatar(
                 radius: 50,
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.amber,
                 child: Text(
                   person.name[0].toUpperCase(),
                   style: TextStyle(fontSize: 40, color: Colors.white),
@@ -570,94 +608,6 @@ class SimpleProfilePage extends StatelessWidget {
                   label: Text('Donut'),
                   backgroundColor: Colors.white,
                 ),
-                Chip(
-                  avatar: CircleAvatar(
-                      backgroundColor: Colors.indigoAccent,
-                      child: Text('E', style: TextStyle(color: Colors.white))),
-                  label: Text('Eclair'),
-                  backgroundColor: Colors.white,
-                ),
-                Chip(
-                  avatar: CircleAvatar(
-                      backgroundColor: Colors.yellowAccent,
-                      child:
-                          Text('F', style: TextStyle(color: Colors.black45))),
-                  label: Text('Froyo'),
-                  backgroundColor: Colors.white,
-                ),
-                Chip(
-                  avatar: CircleAvatar(
-                      backgroundColor: Colors.green,
-                      child: Text('G', style: TextStyle(color: Colors.white))),
-                  label: Text('Gingerbread'),
-                  backgroundColor: Colors.white,
-                ),
-                Chip(
-                  avatar: CircleAvatar(
-                      backgroundColor: Colors.redAccent,
-                      child: Text('H', style: TextStyle(color: Colors.white))),
-                  label: Text('Honeycomb'),
-                  backgroundColor: Colors.white,
-                ),
-                Chip(
-                  avatar: CircleAvatar(
-                      backgroundColor: Colors.greenAccent,
-                      child:
-                          Text('I', style: TextStyle(color: Colors.black45))),
-                  label: Text('Ice cream Sandwich'),
-                  backgroundColor: Colors.white,
-                ),
-                Chip(
-                  avatar: CircleAvatar(
-                      backgroundColor: Colors.deepOrangeAccent,
-                      child: Text('J', style: TextStyle(color: Colors.white))),
-                  label: Text('Jelly Bean'),
-                  backgroundColor: Colors.white,
-                ),
-                Chip(
-                  avatar: CircleAvatar(
-                      backgroundColor: Colors.indigo,
-                      child: Text('K', style: TextStyle(color: Colors.white))),
-                  label: Text('Kit Kat'),
-                  backgroundColor: Colors.white,
-                ),
-                Chip(
-                  avatar: CircleAvatar(
-                      backgroundColor: Colors.tealAccent,
-                      child:
-                          Text('L', style: TextStyle(color: Colors.black45))),
-                  label: Text('Lollipop'),
-                  backgroundColor: Colors.white,
-                ),
-                Chip(
-                  avatar: CircleAvatar(
-                      backgroundColor: Colors.amberAccent,
-                      child: Text('M', style: TextStyle(color: Colors.white))),
-                  label: Text('Marshmallow'),
-                  backgroundColor: Colors.white,
-                ),
-                Chip(
-                  avatar: CircleAvatar(
-                      backgroundColor: Colors.cyan,
-                      child: Text('N', style: TextStyle(color: Colors.white))),
-                  label: Text('Nougat'),
-                  backgroundColor: Colors.white,
-                ),
-                Chip(
-                  avatar: CircleAvatar(
-                      backgroundColor: Colors.red,
-                      child: Text('O', style: TextStyle(color: Colors.white))),
-                  label: Text('Oreo'),
-                  backgroundColor: Colors.white,
-                ),
-                Chip(
-                  avatar: CircleAvatar(
-                      backgroundColor: Colors.greenAccent,
-                      child:
-                          Text('P', style: TextStyle(color: Colors.black45))),
-                  label: Text('Pie'),
-                  backgroundColor: Colors.white,
-                ),
               ],
             )
           ],
@@ -675,154 +625,122 @@ class ContactWidget extends StatefulWidget {
 class _ContactWidgetState extends State<ContactWidget> {
   int hasCards = 0; // Track the number of remaining cards
   bool cardsDisplayed = false; // Track card display state
+  List<bool> isConnectedList = []; // Track connection state for each card
 
   @override
   void initState() {
     super.initState();
     cardsDisplayed = true; // Initialize to false
     hasCards = people.length; // Set initial hasCards value
+    // Initialize isConnectedList with false for each card
+    isConnectedList = List<bool>.generate(people.length, (index) => false);
   }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      child: Center(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.25,
-          height: MediaQuery.of(context).size.height * 0.75,
-          child: cardsDisplayed
-              ? Stack(
-                  // Use Stack for layering
-                  children: [
-                    // Background container with slight offset for shadow effect
-                    Container(
-                        decoration: hasCards > 0
-                            ? BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    20.0), // Match card corners
-                                boxShadow: [
-                                  BoxShadow(
-                                    // Define the shadow
-                                    color: Colors.grey.withOpacity(
-                                        0.3), // Shadow color (optional)
-                                    offset: Offset(
-                                        5.0, 5.0), // Shadow offset (optional)
-                                    blurRadius:
-                                        10.0, // Shadow blur radius (optional)
-                                  ),
-                                ],
-                              )
-                            : BoxDecoration()),
-                    AppinioSwiper(
-                      cardCount:
-                          people.length, // Use the length of the people list
-                      swipeOptions: const SwipeOptions.all(),
-                      onSwipeEnd:
-                          (int index, int index2, SwiperActivity direction) {
-                        setState(() {
-                          hasCards--; // Decrement hasCards
-                          cardsDisplayed =
-                              hasCards > 0; // Mark cards as displayed
-                        });
-                      },
-                      cardBuilder: (BuildContext context, int index) {
-                        final person =
-                            people[index]; // Get the Person object at index
-                        return Container(
-                          alignment: Alignment.center, // Center the content
-                          decoration: BoxDecoration(
-                              color: Color.fromRGBO(255, 255, 255,
-                                  1), // Maintain container color),
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(20),
-                                  topLeft: Radius.circular(20),
-                                  bottomLeft: Radius.circular(20),
-                                  bottomRight: Radius.circular(20))),
-                          child: Column(
-                            // Arrange text vertically
-                            mainAxisAlignment: MainAxisAlignment
-                                .center, // Center content within column
-                            children: [
-                              CircleAvatar(
-                                  radius: 50.0,
-                                  backgroundColor: Colors.red,
-                                  backgroundImage: person.image),
-                              Text(
-                                person.name, // Display the person's name
-                                style: TextStyle(
-                                  // Customize text style (optional)
-                                  fontFamily: 'Pacifico',
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(
-                                  height: 10.0), // Add spacing between lines
-                              SizedBox(
-                                height: 20.0,
-                                width: 150.0,
-                                child: Divider(
-                                  color: const Color.fromARGB(255, 39, 41, 41),
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                // Display email and hashtag
-                                children: [
-                                  Text(
-                                    'Email: ',
-                                    style: TextStyle(
-                                      fontFamily: 'Source Sans Pro',
-                                      color: Colors
-                                          .grey, // Differentiate label text
-                                      letterSpacing: 2.5,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(person.email),
-                                ],
-                              ),
-                              SizedBox(
-                                  height:
-                                      5.0), // Add spacing between email and hashtag
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                // Display hashtag
-                                children: [
-                                  Text(
-                                    'Hashtag: ',
-                                    style: TextStyle(
-                                      fontFamily: 'Source Sans Pro',
-                                      color: Colors
-                                          .grey, // Differentiate label text
-                                      letterSpacing: 2.5,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(person.hashtag),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 20.0,
-                                width: 150.0,
-                                child: Divider(
-                                  color: const Color.fromARGB(255, 39, 41, 41),
-                                ),
-                              ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 300,
+            height: MediaQuery.of(context).size.height * 0.75,
+            child: Stack(
+              children: [
+                Container(
+                  decoration: hasCards > 0
+                      ? BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              offset: Offset(5.0, 5.0),
+                              blurRadius: 10.0,
+                            ),
+                          ],
+                        )
+                      : BoxDecoration(),
+                ),
+                AppinioSwiper(
+                  cardCount: people.length,
+                  swipeOptions: const SwipeOptions.all(),
+                  onSwipeEnd:
+                      (int index, int index2, SwiperActivity direction) {
+                    setState(() {
+                      hasCards--;
+                      cardsDisplayed = hasCards > 0;
+                    });
+                  },
+                  cardBuilder: (BuildContext context, int index) {
+                    final person = people[index];
 
-                              ElevatedButton(
-                                  style: buttonPrimary,
-                                  onPressed: () {},
-                                  child: Text('Connect Now'))
+                    return Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 50.0,
+                            backgroundColor: Colors.red,
+                            backgroundImage: person.image,
+                          ),
+                          SizedBox(height: 20.0),
+                          Text(
+                            textAlign: TextAlign.center,
+                            person.name, // Display the person's name
+                            style: TextStyle(
+                              // Customize text style (optional)
+                              fontFamily: 'Madimi',
+                              fontSize: 30.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 20.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.email),
+                              SizedBox(width: 10),
+                              Text(person.email),
                             ],
                           ),
-                        );
-                      },
-                    ),
-                  ],
-                )
-              : Center(child: Text('No contacts to display')),
-        ),
+                          SizedBox(height: 5.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.back_hand_rounded),
+                              SizedBox(width: 10),
+                              Text(person.hashtag),
+                            ],
+                          ),
+                          SizedBox(height: 20.0),
+                          ElevatedButton(
+                            style: buttonPrimary,
+                            onPressed: isConnectedList[index]
+                                ? null
+                                : () {
+                                    setState(() {
+                                      isConnectedList[index] =
+                                          true; // Mark as connected
+                                    });
+                                  },
+                            child: isConnectedList[index]
+                                ? Icon(Icons.check)
+                                : Text('Connect Now'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -846,6 +764,7 @@ class MessagesWidget extends StatelessWidget {
             },
             child: ListTile(
               leading: CircleAvatar(
+                backgroundColor: Colors.amber,
                 child: Text(people[index].name[0]),
               ),
               title: Text(
