@@ -13,10 +13,12 @@ import 'package:vhack/screens/Room.dart';
 
 final ButtonStyle buttonPrimary = ElevatedButton.styleFrom(
   minimumSize: Size(100, 50),
-  foregroundColor: Colors.black,
+  backgroundColor: Colors.amber.shade400, // Change the primary color to yellow
+  foregroundColor: Colors.white,
   elevation: 0,
   shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(20))),
+    borderRadius: BorderRadius.all(Radius.circular(20)),
+  ),
 );
 
 void main() {
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
       title: 'Mentor-Mentee',
       theme: ThemeData(
         primarySwatch: Colors.amber,
-        // fontFamily: 'Roboto',
+        fontFamily: 'Madimi',
       ),
       home: LoginPage(),
     );
@@ -157,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   List<String> _appBarTitles = [
-    'Hello!',
+    'mentor-mentee',
     'find friends & events',
     'make connections',
     'messages'
@@ -661,82 +663,92 @@ class _ContactWidgetState extends State<ContactWidget> {
                         )
                       : BoxDecoration(),
                 ),
-                AppinioSwiper(
-                  cardCount: people.length,
-                  swipeOptions: const SwipeOptions.all(),
-                  onSwipeEnd:
-                      (int index, int index2, SwiperActivity direction) {
-                    setState(() {
-                      hasCards--;
-                      cardsDisplayed = hasCards > 0;
-                    });
-                  },
-                  cardBuilder: (BuildContext context, int index) {
-                    final person = people[index];
+                hasCards > 0
+                    ? AppinioSwiper(
+                        cardCount: people.length,
+                        swipeOptions: const SwipeOptions.all(),
+                        onSwipeEnd:
+                            (int index, int index2, SwiperActivity direction) {
+                          setState(() {
+                            hasCards--;
+                            cardsDisplayed = hasCards > 0;
+                          });
+                        },
+                        cardBuilder: (BuildContext context, int index) {
+                          final person = people[index];
 
-                    return Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(255, 255, 255, 1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircleAvatar(
-                            radius: 50.0,
-                            backgroundColor: Colors.red,
-                            backgroundImage: person.image,
-                          ),
-                          SizedBox(height: 20.0),
-                          Text(
-                            textAlign: TextAlign.center,
-                            person.name, // Display the person's name
-                            style: TextStyle(
-                              // Customize text style (optional)
-                              fontFamily: 'Madimi',
-                              fontSize: 30.0,
-                              fontWeight: FontWeight.bold,
+                          return Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(255, 255, 255, 1),
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                          ),
-                          SizedBox(height: 20.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.email),
-                              SizedBox(width: 10),
-                              Text(person.email),
-                            ],
-                          ),
-                          SizedBox(height: 5.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.back_hand_rounded),
-                              SizedBox(width: 10),
-                              Text(person.hashtag),
-                            ],
-                          ),
-                          SizedBox(height: 20.0),
-                          ElevatedButton(
-                            style: buttonPrimary,
-                            onPressed: isConnectedList[index]
-                                ? null
-                                : () {
-                                    setState(() {
-                                      isConnectedList[index] =
-                                          true; // Mark as connected
-                                    });
-                                  },
-                            child: isConnectedList[index]
-                                ? Icon(Icons.check)
-                                : Text('Connect Now'),
-                          ),
-                        ],
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  radius: 50.0,
+                                  backgroundColor: Colors.red,
+                                  backgroundImage: person.image,
+                                ),
+                                SizedBox(height: 20.0),
+                                Text(
+                                  textAlign: TextAlign.center,
+                                  person.name, // Display the person's name
+                                  style: TextStyle(
+                                    // Customize text style (optional)
+                                    fontFamily: 'Madimi',
+                                    fontSize: 30.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 20.0),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.email,
+                                      color: Colors.amber,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(person.email),
+                                  ],
+                                ),
+                                SizedBox(height: 5.0),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.back_hand_rounded,
+                                      color: Colors.amber,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(person.hashtag),
+                                  ],
+                                ),
+                                SizedBox(height: 20.0),
+                                ElevatedButton(
+                                  style: buttonPrimary,
+                                  onPressed: isConnectedList[index]
+                                      ? null
+                                      : () {
+                                          setState(() {
+                                            isConnectedList[index] =
+                                                true; // Mark as connected
+                                          });
+                                        },
+                                  child: isConnectedList[index]
+                                      ? Icon(Icons.check)
+                                      : Text('Connect Now'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      )
+                    : Center(
+                        child: Text('Waiting for the next connections...'),
                       ),
-                    );
-                  },
-                ),
               ],
             ),
           ),
@@ -796,6 +808,7 @@ class ProfilePage extends StatelessWidget {
         title: Text(
           'Profile',
           style: TextStyle(
+            fontFamily: 'Madimi',
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -821,7 +834,8 @@ class ProfilePage extends StatelessWidget {
               backgroundColor: Colors.blue,
               child: Text(
                 firstLetter.toUpperCase(),
-                style: TextStyle(fontSize: 40, color: Colors.white),
+                style: TextStyle(
+                    fontFamily: 'Madimi', fontSize: 40, color: Colors.white),
               ),
             ),
             SizedBox(width: 20),
@@ -830,22 +844,28 @@ class ProfilePage extends StatelessWidget {
               children: [
                 Text(
                   userName,
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontFamily: 'Madimi',
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 10),
                 Text(
                   'Username: jiaxin123',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  style: TextStyle(
+                      fontFamily: 'Madimi', fontSize: 16, color: Colors.grey),
                 ),
                 SizedBox(height: 10),
                 Text(
                   'Email: jiaxin@example.com',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  style: TextStyle(
+                      fontFamily: 'Madimi', fontSize: 16, color: Colors.grey),
                 ),
                 SizedBox(height: 10),
                 Text(
                   'Hashtag: #UM',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  style: TextStyle(
+                      fontFamily: 'Madimi', fontSize: 16, color: Colors.grey),
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
@@ -871,32 +891,32 @@ class ProfilePage extends StatelessWidget {
                 SizedBox(height: 20),
                 Wrap(
                   spacing: 4.0, // gap between lines
-                  children: <Widget>[
-                    Chip(
-                      avatar: CircleAvatar(
-                          backgroundColor: Colors.orange,
-                          child:
-                              Text('C', style: TextStyle(color: Colors.white))),
-                      label: Text('Cupcake'),
-                      backgroundColor: Colors.white,
-                    ),
-                    Chip(
-                      avatar: CircleAvatar(
-                          backgroundColor: Colors.cyanAccent,
-                          child: Text('D',
-                              style: TextStyle(color: Colors.black45))),
-                      label: Text('Donut'),
-                      backgroundColor: Colors.white,
-                    ),
-                    Chip(
-                      avatar: CircleAvatar(
-                          backgroundColor: Colors.indigoAccent,
-                          child:
-                              Text('E', style: TextStyle(color: Colors.white))),
-                      label: Text('Eclair'),
-                      backgroundColor: Colors.white,
-                    ),
-                  ],
+                  // children: <Widget>[
+                  //   Chip(
+                  //     avatar: CircleAvatar(
+                  //         backgroundColor: Colors.orange,
+                  //         child:
+                  //             Text('C', style: TextStyle(color: Colors.white))),
+                  //     label: Text('Cupcake'),
+                  //     backgroundColor: Colors.white,
+                  //   ),
+                  //   Chip(
+                  //     avatar: CircleAvatar(
+                  //         backgroundColor: Colors.cyanAccent,
+                  //         child: Text('D',
+                  //             style: TextStyle(color: Colors.black45))),
+                  //     label: Text('Donut'),
+                  //     backgroundColor: Colors.white,
+                  //   ),
+                  //   Chip(
+                  //     avatar: CircleAvatar(
+                  //         backgroundColor: Colors.indigoAccent,
+                  //         child:
+                  //             Text('E', style: TextStyle(color: Colors.white))),
+                  //     label: Text('Eclair'),
+                  //     backgroundColor: Colors.white,
+                  //   ),
+                  // ],
                 )
               ],
             ),
