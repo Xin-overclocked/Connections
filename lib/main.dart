@@ -8,6 +8,7 @@ import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:vhack/screens/Room.dart';
 
@@ -22,7 +23,12 @@ final ButtonStyle buttonPrimary = ElevatedButton.styleFrom(
 );
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => Enrollment(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -243,37 +249,40 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class EnrollButton extends StatefulWidget {
+class EnrollButton extends StatelessWidget {
   const EnrollButton({Key? key}) : super(key: key);
-  @override
-  State<EnrollButton> createState() => _EnrollButtonState();
-}
 
-class _EnrollButtonState extends State<EnrollButton> {
-  bool isButtonActive = true;
   @override
   Widget build(BuildContext context) {
+    final enrollment = Provider.of<Enrollment>(context);
+
     return ElevatedButton(
-      onPressed: isButtonActive
-          ? () {
-              setState(() => isButtonActive = false);
-              // Handle enrollment logic (potentially using setState)
-              // You can optionally show a snackbar or dialog here
-            }
-          : null,
+      onPressed:
+          enrollment.isEnrolled ? null : () => enrollment.toggleEnrollment(),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isButtonActive ? Colors.white : Colors.blue,
+        backgroundColor: enrollment.isEnrolled ? Colors.blue : Colors.white,
         padding: EdgeInsets.symmetric(horizontal: 10.0),
       ),
       child: Text(
-        isButtonActive ? 'Enroll' : 'Enrolled',
+        enrollment.isEnrolled ? 'Enrolled' : 'Enroll',
         style: TextStyle(
           fontFamily: 'Madimi',
-          color: isButtonActive ? Colors.black : Colors.grey, // Adjust colors
+          color: enrollment.isEnrolled ? Colors.grey : Colors.black,
           fontSize: 16,
         ),
       ),
     );
+  }
+}
+
+class Enrollment extends ChangeNotifier {
+  bool _isEnrolled = false;
+
+  bool get isEnrolled => _isEnrolled;
+
+  void toggleEnrollment() {
+    _isEnrolled = !_isEnrolled;
+    notifyListeners();
   }
 }
 
@@ -292,13 +301,13 @@ class RoomDetails {
 // Dummy room details
 final List<RoomDetails> dummyRoomDetails = [
   RoomDetails(
-    title: 'Room 1',
+    title: 'Ethical AI and Data Ethics',
     dateTime: 'March 20, 2024 10:00 AM',
     details:
         'This is a meeting room for team A. The agenda includes project brainstorming and task allocation.',
   ),
   RoomDetails(
-    title: 'Room 2',
+    title: 'A Brief to Artificial Intelligence',
     dateTime: 'Happening Now...',
     details:
         'This is a client meeting room. The agenda includes presenting our latest proposal and discussing next steps.',
@@ -437,6 +446,7 @@ class _RoomTileState extends State<RoomTile> {
             style: TextStyle(
               fontFamily: 'RoundBlack',
               fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(height: 5),
@@ -445,7 +455,8 @@ class _RoomTileState extends State<RoomTile> {
             style: TextStyle(
                 fontFamily: 'RoundBold', fontSize: 15, color: Colors.grey),
           ),
-          SizedBox(height: 10), // Add space before button
+          SizedBox(height: 10),
+          // Add space before button
           if (widget.showEnrollButton) // Only show for Room 1
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -542,6 +553,7 @@ class SimpleProfilePage extends StatelessWidget {
           person.name,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        backgroundColor: Colors.amber, // Set app bar background color
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -562,12 +574,14 @@ class SimpleProfilePage extends StatelessWidget {
             Center(
               child: Text(
                 person.name,
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(
+                    fontSize: 20, color: Colors.amber), // Set text color
               ),
             ),
             SizedBox(height: 10),
             Center(
-              child: ElevatedButton(
+              child: TextButton(
+                // Change ElevatedButton to TextButton
                 onPressed: () {
                   // Navigate to the chat screen
                   Navigator.push(
@@ -575,43 +589,49 @@ class SimpleProfilePage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => ChatScreen(person)),
                   );
                 },
-                child: Text('Message'),
+                child: Text(
+                  'Message',
+                  style: TextStyle(color: Colors.amber), // Set text color
+                ),
               ),
             ),
             SizedBox(height: 10),
             Center(
               child: Text(
                 'Email: ${person.email}',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(
+                    fontSize: 16, color: Colors.amber), // Set text color
               ),
             ),
             SizedBox(height: 10),
             Center(
               child: Text(
                 'Hashtag: ${person.hashtag}',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(
+                    fontSize: 16, color: Colors.amber), // Set text color
               ),
             ),
-            Wrap(
-              spacing: 4.0, // gap between lines
-              children: <Widget>[
-                Chip(
-                  avatar: CircleAvatar(
-                      backgroundColor: Colors.orange,
-                      child: Text('C', style: TextStyle(color: Colors.white))),
-                  label: Text('Cupcake'),
-                  backgroundColor: Colors.white,
-                ),
-                Chip(
-                  avatar: CircleAvatar(
-                      backgroundColor: Colors.cyanAccent,
-                      child:
-                          Text('D', style: TextStyle(color: Colors.black45))),
-                  label: Text('Donut'),
-                  backgroundColor: Colors.white,
-                ),
-              ],
-            )
+            // Wrap(
+            //   spacing: 4.0, // gap between lines
+            //   children: <Widget>[
+            //     Chip(
+            //       avatar: CircleAvatar(
+            //         backgroundColor: Colors.orange,
+            //         child: Text('C', style: TextStyle(color: Colors.white)),
+            //       ),
+            //       label: Text('Cupcake'),
+            //       backgroundColor: Colors.white,
+            //     ),
+            //     Chip(
+            //       avatar: CircleAvatar(
+            //         backgroundColor: Colors.cyanAccent,
+            //         child: Text('D', style: TextStyle(color: Colors.black45)),
+            //       ),
+            //       label: Text('Donut'),
+            //       backgroundColor: Colors.white,
+            //     ),
+            //   ],
+            // )
           ],
         ),
       ),
@@ -626,20 +646,30 @@ class ContactWidget extends StatefulWidget {
 
 class _ContactWidgetState extends State<ContactWidget> {
   int hasCards = 0; // Track the number of remaining cards
-  bool cardsDisplayed = false; // Track card display state
   List<bool> isConnectedList = []; // Track connection state for each card
 
   @override
   void initState() {
     super.initState();
-    cardsDisplayed = true; // Initialize to false
-    hasCards = people.length; // Set initial hasCards value
+    // Calculate the number of cards excluding "Universiti Malaya" and "Universiti Sains Malaysia"
+    hasCards = people
+        .where((person) =>
+            person.name != 'Universiti Malaya' &&
+            person.name != 'Universiti Sains Malaysia')
+        .length;
     // Initialize isConnectedList with false for each card
-    isConnectedList = List<bool>.generate(people.length, (index) => false);
+    isConnectedList = List<bool>.generate(hasCards, (index) => false);
   }
 
   @override
   Widget build(BuildContext context) {
+    // Filter out the "Universiti Malaya" and "Universiti Sains Malaysia" cards
+    final List<Person> displayedPeople = people
+        .where((person) =>
+            person.name != 'Universiti Malaya' &&
+            person.name != 'Universiti Sains Malaysia')
+        .toList();
+
     return CupertinoPageScaffold(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -665,17 +695,16 @@ class _ContactWidgetState extends State<ContactWidget> {
                 ),
                 hasCards > 0
                     ? AppinioSwiper(
-                        cardCount: people.length,
+                        cardCount: displayedPeople.length,
                         swipeOptions: const SwipeOptions.all(),
                         onSwipeEnd:
                             (int index, int index2, SwiperActivity direction) {
                           setState(() {
                             hasCards--;
-                            cardsDisplayed = hasCards > 0;
                           });
                         },
                         cardBuilder: (BuildContext context, int index) {
-                          final person = people[index];
+                          final person = displayedPeople[index];
 
                           return Container(
                             alignment: Alignment.center,
@@ -692,14 +721,25 @@ class _ContactWidgetState extends State<ContactWidget> {
                                   backgroundImage: person.image,
                                 ),
                                 SizedBox(height: 20.0),
-                                Text(
-                                  textAlign: TextAlign.center,
-                                  person.name, // Display the person's name
-                                  style: TextStyle(
-                                    // Customize text style (optional)
-                                    fontFamily: 'Madimi',
-                                    fontSize: 30.0,
-                                    fontWeight: FontWeight.bold,
+                                GestureDetector(
+                                  onTap: () {
+                                    // Navigate to the profile screen
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              SimpleProfilePage(person)),
+                                    );
+                                  },
+                                  child: Text(
+                                    person.name, // Display the person's name
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      // Customize text style (optional)
+                                      fontFamily: 'Madimi',
+                                      fontSize: 30.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                                 SizedBox(height: 20.0),
@@ -747,7 +787,7 @@ class _ContactWidgetState extends State<ContactWidget> {
                         },
                       )
                     : Center(
-                        child: Text('Waiting for the next connections...'),
+                        child: Text('Waiting for next connections...'),
                       ),
               ],
             ),
@@ -1111,6 +1151,17 @@ List<Person> people = [
       Message('Hello!', false),
       Message('How are you?', false),
       Message('I\'m fine, thank you!', true),
+    ],
+  ),
+  Person(
+    'Eve Johnson',
+    'eve@example.com',
+    '#UPM',
+    johnDoeImage,
+    [
+      Message('Hi there!', false),
+      Message('How are you?', false),
+      Message('I\'m doing great, thanks!', true),
     ],
   ),
   Person(
