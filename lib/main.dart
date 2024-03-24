@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Mentor-Mentee',
+      title: 'Connections',
       theme: ThemeData(
         primarySwatch: Colors.amber,
         fontFamily: 'Madimi',
