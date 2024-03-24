@@ -70,7 +70,7 @@ class LoginPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Login',
+                    'Connections',
                     style: TextStyle(
                       fontFamily: 'Madimi',
                       color: Colors.white,
@@ -165,8 +165,8 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   List<String> _appBarTitles = [
-    'mentor-mentee',
-    'find friends & events',
+    'Connections',
+    'find connects & events',
     'make connections',
     'messages'
   ];
@@ -249,6 +249,17 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+class Enrollment extends ChangeNotifier {
+  bool _isEnrolled = false;
+
+  bool get isEnrolled => _isEnrolled;
+
+  void toggleEnrollment() {
+    _isEnrolled = !_isEnrolled;
+    notifyListeners();
+  }
+}
+
 class EnrollButton extends StatelessWidget {
   const EnrollButton({Key? key}) : super(key: key);
 
@@ -275,45 +286,6 @@ class EnrollButton extends StatelessWidget {
   }
 }
 
-class Enrollment extends ChangeNotifier {
-  bool _isEnrolled = false;
-
-  bool get isEnrolled => _isEnrolled;
-
-  void toggleEnrollment() {
-    _isEnrolled = !_isEnrolled;
-    notifyListeners();
-  }
-}
-
-class RoomDetails {
-  final String title;
-  final String dateTime;
-  final String details;
-
-  const RoomDetails({
-    required this.title,
-    required this.dateTime,
-    required this.details,
-  });
-}
-
-// Dummy room details
-final List<RoomDetails> dummyRoomDetails = [
-  RoomDetails(
-    title: 'Ethical AI and Data Ethics',
-    dateTime: 'March 20, 2024 10:00 AM',
-    details:
-        'This is a meeting room for team A. The agenda includes project brainstorming and task allocation.',
-  ),
-  RoomDetails(
-    title: 'A Brief to Artificial Intelligence',
-    dateTime: 'Happening Now...',
-    details:
-        'This is a client meeting room. The agenda includes presenting our latest proposal and discussing next steps.',
-  ),
-];
-
 class HomeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -336,11 +308,11 @@ class HomeWidget extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 5.0),
                       child: Text(
-                        "Jia Xin",
+                        "Welcome, Jia Xin",
                         style: TextStyle(
                           fontFamily: 'Madimi',
                           color: Colors.amber,
-                          fontSize: 50.0,
+                          fontSize: 40.0,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -387,7 +359,7 @@ class HomeWidget extends StatelessWidget {
   }
 }
 
-class RoomTile extends StatefulWidget {
+class RoomTile extends StatelessWidget {
   final RoomDetails roomDetails; // Use the RoomDetails class
   final double width; // New property to control the width of the card
   final bool showEnrollButton; // Flag to control button visibility
@@ -399,30 +371,9 @@ class RoomTile extends StatefulWidget {
   });
 
   @override
-  _RoomTileState createState() => _RoomTileState();
-}
-
-class _RoomTileState extends State<RoomTile> {
-  bool _isEnrolled = false; // Internal state for enrollment
-
-  @override
-  void initState() {
-    super.initState();
-    _isEnrolled = widget.showEnrollButton
-        ? false
-        : true; // Set initial enrollment based on flag
-  }
-
-  void _toggleEnrollment() {
-    setState(() {
-      _isEnrolled = !_isEnrolled;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
-      width: widget.width, // Set width of the card
+      width: width, // Set width of the card
       padding:
           EdgeInsets.only(top: 20.0, bottom: 20.0, left: 25.0, right: 10.0),
       decoration: BoxDecoration(
@@ -442,7 +393,7 @@ class _RoomTileState extends State<RoomTile> {
         children: [
           SizedBox(height: 5),
           Text(
-            widget.roomDetails.title, // Access title from RoomDetails
+            roomDetails.title, // Access title from RoomDetails
             style: TextStyle(
               fontFamily: 'RoundBlack',
               fontSize: 20,
@@ -451,13 +402,13 @@ class _RoomTileState extends State<RoomTile> {
           ),
           SizedBox(height: 5),
           Text(
-            widget.roomDetails.dateTime, // Access dateTime from RoomDetails
+            roomDetails.dateTime, // Access dateTime from RoomDetails
             style: TextStyle(
                 fontFamily: 'RoundBold', fontSize: 15, color: Colors.grey),
           ),
           SizedBox(height: 10),
           // Add space before button
-          if (widget.showEnrollButton) // Only show for Room 1
+          if (showEnrollButton) // Only show for Room 1
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -470,6 +421,39 @@ class _RoomTileState extends State<RoomTile> {
   }
 }
 
+class RoomDetails {
+  final String title;
+  final String dateTime;
+  final String details;
+  final List<String> hashtags;
+
+  const RoomDetails({
+    required this.title,
+    required this.dateTime,
+    required this.details,
+    required this.hashtags,
+  });
+}
+
+// Dummy room details
+final List<RoomDetails> dummyRoomDetails = [
+  RoomDetails(
+    title: 'Ethical AI and Data Ethics',
+    dateTime: 'March 20, 2024 10:00 AM',
+    details:
+        'This is a meeting room for team A. The agenda includes project brainstorming and task allocation.',
+    hashtags: ['AI'], // Hashtags for Room 1
+  ),
+  RoomDetails(
+    title: 'A Brief to Artificial Intelligence',
+    dateTime: 'Happening Now...',
+    details:
+        'This is a client meeting room. The agenda includes presenting our latest proposal and discussing next steps.',
+    hashtags: ['AI'], // Hashtags for Room 2
+  ),
+];
+
+//SearchWidget
 class SearchWidget extends StatefulWidget {
   @override
   State<SearchWidget> createState() => _SearchWidgetState();
@@ -540,17 +524,66 @@ class _SearchWidgetState extends State<SearchWidget> {
   }
 }
 
-class SimpleProfilePage extends StatelessWidget {
-  final Person person;
+class PeopleList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final enrollment = Provider.of<Enrollment>(context);
 
-  SimpleProfilePage(this.person);
+    return ListView.builder(
+      itemCount: people.length,
+      itemBuilder: (context, index) {
+        final person = people[index];
+        // Check if the person's hashtag should be displayed based on enrollment state
+        final bool shouldDisplayHashtag = enrollment.isEnrolled &&
+            (person.name == 'John Doe' ||
+                person.name == 'Alice Smith' ||
+                person.name == 'Bob Johnson');
+
+        return SimpleProfilePage(person, shouldDisplayHashtag: true);
+      },
+    );
+  }
+}
+
+class SimpleProfilePage extends StatefulWidget {
+  final Person person;
+  final bool shouldDisplayHashtag; // Add named parameter
+
+  SimpleProfilePage(this.person,
+      {this.shouldDisplayHashtag =
+          false}); // Provide default value for the named parameter
+
+  @override
+  _SimpleProfilePageState createState() => _SimpleProfilePageState();
+}
+
+class _SimpleProfilePageState extends State<SimpleProfilePage> {
+  List<String> hashtags = []; // Initial empty list of hashtags
 
   @override
   Widget build(BuildContext context) {
+    String userName = widget.person.name;
+    String firstLetter = userName.isNotEmpty ? userName[0] : '';
+
+    // Determine if the person is enrolled
+    bool isEnrolled = widget.person.hashtag ==
+        "#UM"; // Change this condition based on your enrollment logic
+
+    // Update hashtags based on enrollment and shouldDisplayHashtag
+    if (isEnrolled && widget.shouldDisplayHashtag) {
+      // If enrolled and shouldDisplayHashtag is true, only show the AI hashtag
+      hashtags = [
+        '#AI'
+      ]; // Update with the AI hashtag or use dynamic logic based on the person
+    } else {
+      // If not enrolled or shouldDisplayHashtag is false, reset hashtags
+      hashtags = [];
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          person.name,
+          widget.person.name,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.amber, // Set app bar background color
@@ -565,7 +598,7 @@ class SimpleProfilePage extends StatelessWidget {
                 radius: 50,
                 backgroundColor: Colors.amber,
                 child: Text(
-                  person.name[0].toUpperCase(),
+                  firstLetter.toUpperCase(),
                   style: TextStyle(fontSize: 40, color: Colors.white),
                 ),
               ),
@@ -573,7 +606,7 @@ class SimpleProfilePage extends StatelessWidget {
             SizedBox(height: 20),
             Center(
               child: Text(
-                person.name,
+                userName,
                 style: TextStyle(
                     fontSize: 20, color: Colors.amber), // Set text color
               ),
@@ -586,7 +619,8 @@ class SimpleProfilePage extends StatelessWidget {
                   // Navigate to the chat screen
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ChatScreen(person)),
+                    MaterialPageRoute(
+                        builder: (context) => ChatScreen(widget.person)),
                   );
                 },
                 child: Text(
@@ -598,44 +632,35 @@ class SimpleProfilePage extends StatelessWidget {
             SizedBox(height: 10),
             Center(
               child: Text(
-                'Email: ${person.email}',
+                'Email: ${widget.person.email}',
                 style: TextStyle(
                     fontSize: 16, color: Colors.amber), // Set text color
               ),
             ),
             SizedBox(height: 10),
+            // if (widget
+            //     .shouldDisplayHashtag) // Only display hashtags if shouldDisplayHashtag is true
             Center(
               child: Text(
-                'Hashtag: ${person.hashtag}',
+                'Hashtags: ${widget.person.hashtag}', // Display hashtags
                 style: TextStyle(
                     fontSize: 16, color: Colors.amber), // Set text color
               ),
             ),
-            // Wrap(
-            //   spacing: 4.0, // gap between lines
-            //   children: <Widget>[
-            //     Chip(
-            //       avatar: CircleAvatar(
-            //         backgroundColor: Colors.orange,
-            //         child: Text('C', style: TextStyle(color: Colors.white)),
-            //       ),
-            //       label: Text('Cupcake'),
-            //       backgroundColor: Colors.white,
-            //     ),
-            //     Chip(
-            //       avatar: CircleAvatar(
-            //         backgroundColor: Colors.cyanAccent,
-            //         child: Text('D', style: TextStyle(color: Colors.black45)),
-            //       ),
-            //       label: Text('Donut'),
-            //       backgroundColor: Colors.white,
-            //     ),
-            //   ],
-            // )
           ],
         ),
       ),
     );
+  }
+}
+
+class HashtagState extends ChangeNotifier {
+  List<String> hashtags = []; // Initial empty list of hashtags
+
+  // Function to update the hashtags
+  void updateHashtags(List<String> newHashtags) {
+    hashtags = newHashtags;
+    notifyListeners(); // Notify listeners about the change
   }
 }
 
@@ -669,131 +694,137 @@ class _ContactWidgetState extends State<ContactWidget> {
             person.name != 'Universiti Malaya' &&
             person.name != 'Universiti Sains Malaysia')
         .toList();
-
-    return CupertinoPageScaffold(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 300,
-            height: MediaQuery.of(context).size.height * 0.75,
-            child: Stack(
-              children: [
-                Container(
-                  decoration: hasCards > 0
-                      ? BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              offset: Offset(5.0, 5.0),
-                              blurRadius: 10.0,
-                            ),
-                          ],
-                        )
-                      : BoxDecoration(),
-                ),
-                hasCards > 0
-                    ? AppinioSwiper(
-                        cardCount: displayedPeople.length,
-                        swipeOptions: const SwipeOptions.all(),
-                        onSwipeEnd:
-                            (int index, int index2, SwiperActivity direction) {
-                          setState(() {
-                            hasCards--;
-                          });
-                        },
-                        cardBuilder: (BuildContext context, int index) {
-                          final person = displayedPeople[index];
-
-                          return Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(255, 255, 255, 1),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircleAvatar(
-                                  radius: 50.0,
-                                  backgroundColor: Colors.red,
-                                  backgroundImage: person.image,
-                                ),
-                                SizedBox(height: 20.0),
-                                GestureDetector(
-                                  onTap: () {
-                                    // Navigate to the profile screen
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              SimpleProfilePage(person)),
-                                    );
-                                  },
-                                  child: Text(
-                                    person.name, // Display the person's name
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      // Customize text style (optional)
-                                      fontFamily: 'Madimi',
-                                      fontSize: 30.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 20.0),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.email,
-                                      color: Colors.amber,
-                                    ),
-                                    SizedBox(width: 10),
-                                    Text(person.email),
-                                  ],
-                                ),
-                                SizedBox(height: 5.0),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.back_hand_rounded,
-                                      color: Colors.amber,
-                                    ),
-                                    SizedBox(width: 10),
-                                    Text(person.hashtag),
-                                  ],
-                                ),
-                                SizedBox(height: 20.0),
-                                ElevatedButton(
-                                  style: buttonPrimary,
-                                  onPressed: isConnectedList[index]
-                                      ? null
-                                      : () {
-                                          setState(() {
-                                            isConnectedList[index] =
-                                                true; // Mark as connected
-                                          });
-                                        },
-                                  child: isConnectedList[index]
-                                      ? Icon(Icons.check)
-                                      : Text('Connect Now'),
+    return Consumer<HashtagState>(
+      builder: (context, hashtagState, _) {
+        return CupertinoPageScaffold(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 300,
+                height: MediaQuery.of(context).size.height * 0.75,
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: hasCards > 0
+                          ? BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  offset: Offset(5.0, 5.0),
+                                  blurRadius: 10.0,
                                 ),
                               ],
-                            ),
-                          );
-                        },
-                      )
-                    : Center(
-                        child: Text('Waiting for next connections...'),
-                      ),
-              ],
-            ),
+                            )
+                          : BoxDecoration(),
+                    ),
+                    hasCards > 0
+                        ? AppinioSwiper(
+                            cardCount: displayedPeople.length,
+                            swipeOptions: const SwipeOptions.all(),
+                            onSwipeEnd: (int index, int index2,
+                                SwiperActivity direction) {
+                              setState(() {
+                                hasCards--;
+                              });
+                            },
+                            cardBuilder: (BuildContext context, int index) {
+                              final person = displayedPeople[index];
+
+                              return Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(255, 255, 255, 1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 50.0,
+                                      backgroundColor: Colors.red,
+                                      backgroundImage: person.image,
+                                    ),
+                                    SizedBox(height: 20.0),
+                                    GestureDetector(
+                                      onTap: () {
+                                        // Navigate to the profile screen
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SimpleProfilePage(person)),
+                                        );
+                                      },
+                                      child: Text(
+                                        person
+                                            .name, // Display the person's name
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          // Customize text style (optional)
+                                          fontFamily: 'Madimi',
+                                          fontSize: 30.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 20.0),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.email,
+                                          color: Colors.amber,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(person.email),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5.0),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.back_hand_rounded,
+                                          color: Colors.amber,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(person.hashtag),
+                                      ],
+                                    ),
+                                    SizedBox(height: 20.0),
+                                    ElevatedButton(
+                                      style: buttonPrimary,
+                                      onPressed: isConnectedList[index]
+                                          ? null
+                                          : () {
+                                              setState(() {
+                                                isConnectedList[index] =
+                                                    true; // Mark as connected
+                                              });
+                                            },
+                                      child: isConnectedList[index]
+                                          ? Icon(Icons.check)
+                                          : Text('Connect Now'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          )
+                        : Center(
+                            child: Text('Waiting for next connections...'),
+                          ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -838,11 +869,36 @@ class MessagesWidget extends StatelessWidget {
   }
 }
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  List<String> hashtags = []; // Initial empty list of hashtags
+
   @override
   Widget build(BuildContext context) {
     String userName = 'Low Jia Xin';
     String firstLetter = userName.isNotEmpty ? userName[0] : '';
+    final enrollment = Provider.of<Enrollment>(context);
+
+    if (enrollment.isEnrolled) {
+      // If enrolled, gather hashtags for the enrolled room
+      final enrolledRoom = dummyRoomDetails.firstWhere(
+        (room) =>
+            room.title ==
+            'Ethical AI and Data Ethics', // Change to the desired room title
+        orElse: () =>
+            RoomDetails(title: '', dateTime: '', details: '', hashtags: []),
+      );
+
+      hashtags = enrolledRoom.hashtags;
+    } else {
+      // If not enrolled, reset hashtags
+      hashtags = [];
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -903,9 +959,19 @@ class ProfilePage extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Hashtag: #UM',
+                  'Hashtags:', // Displaying hashtags
                   style: TextStyle(
                       fontFamily: 'Madimi', fontSize: 16, color: Colors.grey),
+                ),
+                // Display hashtags dynamically
+                Wrap(
+                  spacing: 4.0,
+                  children: hashtags
+                      .map((hashtag) => Chip(
+                            label:
+                                Text('#$hashtag'), // Display hashtags as chips
+                          ))
+                      .toList(),
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
@@ -929,35 +995,13 @@ class ProfilePage extends StatelessWidget {
                   child: Text('Add Hashtag'),
                 ),
                 SizedBox(height: 20),
-                Wrap(
-                  spacing: 4.0, // gap between lines
-                  // children: <Widget>[
-                  //   Chip(
-                  //     avatar: CircleAvatar(
-                  //         backgroundColor: Colors.orange,
-                  //         child:
-                  //             Text('C', style: TextStyle(color: Colors.white))),
-                  //     label: Text('Cupcake'),
-                  //     backgroundColor: Colors.white,
-                  //   ),
-                  //   Chip(
-                  //     avatar: CircleAvatar(
-                  //         backgroundColor: Colors.cyanAccent,
-                  //         child: Text('D',
-                  //             style: TextStyle(color: Colors.black45))),
-                  //     label: Text('Donut'),
-                  //     backgroundColor: Colors.white,
-                  //   ),
-                  //   Chip(
-                  //     avatar: CircleAvatar(
-                  //         backgroundColor: Colors.indigoAccent,
-                  //         child:
-                  //             Text('E', style: TextStyle(color: Colors.white))),
-                  //     label: Text('Eclair'),
-                  //     backgroundColor: Colors.white,
-                  //   ),
-                  // ],
-                )
+                // Button to add hashtags
+                ElevatedButton(
+                  onPressed: () {
+                    // Add functionality to add hashtags
+                  },
+                  child: Text('Add Hashtag'),
+                ),
               ],
             ),
           ],
