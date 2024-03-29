@@ -53,4 +53,4 @@ Connections facilitates connections between mentors and mentees through online a
 
 ---
 
-By Team Connections 🌐
+By Team Connect 🌐
