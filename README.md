@@ -37,11 +37,11 @@ Connections facilitates connections between mentors and mentees through online a
 ## Competitor Analysis 📊
 | Features              | Clubhouse | LinkedIn | Connections |
 |-----------------------|-----------|----------|-------------|
-| Mentorship Events     | ✅        | ❌        | ✅          |
-| Messaging             | ❌        | ❌        | ✅          |
-| Recommended Connections with Same Hashtag | ✅        | ❌        | ✅          |
-| Easy to Approach Mentors | ✅        | ✅        | ❌          |
-| Audio Streaming       | ❌        | ❌        | ✅          |
+| Mentorship Events     | ❌      | ✅        | ✅          |
+| Messaging             |  ✅       | ✅        | ✅          |
+| Recommended Connections with Same Hashtag | ❌        | ❌        | ✅          |
+| Easy to Approach Mentors | ❌        |  ❌      | ✅          |
+| Audio Streaming       | ✅        | ✅        | ✅          |
 | Community Building    | For social media influencers | Among professionals, businesses, and thought leaders | Among recent graduates and professionals |
 
 ## Future Improvements 🔮
