@@ -1,4 +1,3 @@
-```markdown
 # Connections: Mentor-Mentee Audio Streaming and Slide Platform 🌟
 
 ## Overview 🚀
@@ -55,4 +54,3 @@ Connections facilitates connections between mentors and mentees through online a
 ---
 
 By Team Connections 🌐
-```
